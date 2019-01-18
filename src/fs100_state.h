@@ -67,7 +67,7 @@ private:
     
     pthread_mutex_t mut_lock; /*!< Mutex lock. */
     pthread_cond_t mut_cond; /*!< Mutex condition. */
-    float current_pos[6]; /*!< Current robot joint position. */
+    float current_pos[NUMBER_OF_JOINTS]; /*!< Current robot joint position. */
     bool pos_updated; /*!< Is current robot joint position updated? */
 
     static void *recvDataThread(void *This);

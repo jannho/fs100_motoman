@@ -45,13 +45,14 @@
 #include <pthread.h>
 
 #include "motoman_direct_message.h"
+
 //! Command struct
 /*!
   Command struct for internal queue. Defines trajectory point position, velocity and time from last command.
 */
 typedef struct{
-        float pos[6]; /*!< Variable containing trajectory point position. */
-        float vel[6];/*!< Variable containing trajectory point velocity. */
+        float pos[NUMBER_OF_JOINTS]; /*!< Variable containing trajectory point position. */
+        float vel[NUMBER_OF_JOINTS];/*!< Variable containing trajectory point velocity. */
         float time;/*!< Variable containing trajectory point time from last command. */
 }cmd;
 
@@ -87,8 +88,8 @@ private:
     void byteSwap(char* data,int length);
     void serialize(SimpleMsg *msg, char *data,int size);
     void deserializeMotionReply(char *data,SimpleMsg *msg);
-    int buildTrajPos(SimpleMsg *tm,float pos[6],float time,int seq);
-    int buildTrajFull(SimpleMsg *tm,float pos[6],float vel[6],float time,int seq);
+    int buildTrajPos(SimpleMsg *tm,float pos[NUMBER_OF_JOINTS],float time,int seq);
+    int buildTrajFull(SimpleMsg *tm,float pos[NUMBER_OF_JOINTS],float vel[NUMBER_OF_JOINTS],float time,int seq);
     void motionReady(SimpleMsg *msg);
     void trajectoryStart(SimpleMsg *msg);
     void trajectoryStop(SimpleMsg *msg);
@@ -146,7 +147,7 @@ public:
      \param time specifies trajectory point time from last point.
      \param seq speciefies trajectory point sequence number.
     */
-    bool pushTraj(float pos[6],float vel[6],float time,int seq);
+    bool pushTraj(float pos[NUMBER_OF_JOINTS],float vel[NUMBER_OF_JOINTS],float time,int seq);
     //! Adds a command to internal queue.
     /*!
      Adds a command struct to internal queue, which will be sent to controller as fast as possible.
@@ -161,7 +162,7 @@ public:
      \param vel specifies trajectory point velocity.
      \param time specifies trajectory point time from last point.
     */ 
-    bool addPointToQueue(float pos[6],float vel[6],float time);
+    bool addPointToQueue(float pos[NUMBER_OF_JOINTS],float vel[NUMBER_OF_JOINTS],float time);
     
     //! Closes the class.
     /*!

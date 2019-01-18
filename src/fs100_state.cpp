@@ -98,7 +98,7 @@ void Fs100State::recvData()
             deserializeJointFeedback(raw_data,&joint_data);
             //printf("pos[0]: %f\n",joint_data.body.jointFeedback.pos[0]);
             pthread_mutex_unlock(&mut_lock);
-            for(int i=0;i<6;i++)
+            for(int i=0;i<NUMBER_OF_JOINTS;i++)
             {
                 //js.position[i] = joint_data.body.jointFeedback.pos[i];
                 current_pos[i] = joint_data.body.jointFeedback.pos[i];
@@ -159,15 +159,15 @@ void Fs100State::deserializeJointFeedback(char *data,SimpleMsg *msg)
     msg->body.jointFeedback.validFields = *q; q++;
     //change from integer to float
     msg->body.jointFeedback.time = *(float*)q; q++;
-    for(int i=0;i<10;i++)
+    for(int i=0;i<ROS_MAX_JOINT;i++)
     {
         msg->body.jointFeedback.pos[i] = *(float*)q; q++;
     }
-    for(int i=0;i<10;i++)
+    for(int i=0;i<ROS_MAX_JOINT;i++)
     {
         msg->body.jointFeedback.vel[i] = *(float*)q; q++;
     }
-    for(int i=0;i<10;i++)
+    for(int i=0;i<ROS_MAX_JOINT;i++)
     {
         msg->body.jointFeedback.acc[i] =  *(float*)q; q++;
     }
@@ -190,7 +190,7 @@ void Fs100State::deserializeMotionReply(char *data,SimpleMsg *msg)
     msg->body.motionReply.command = *q; q++;
     msg->body.motionReply.result = (SmResultType) *q; q++;
     msg->body.motionReply.subcode = *q; q++;
-    for(int i=0;i<10;i++)
+    for(int i=0;i<ROS_MAX_JOINT;i++)
     {
         msg->body.motionReply.data[i] = *(float*)q; q++;
     }    
@@ -256,7 +256,7 @@ bool Fs100State::getJointsUpdated(float* joints)
     pthread_mutex_lock(&mut_lock);
     if (pos_updated)
     {
-        for(int i=0;i<6;i++)
+        for(int i=0;i<NUMBER_OF_JOINTS;i++)
         {
             joints[i] = joint_data.body.jointFeedback.pos[i];
         }

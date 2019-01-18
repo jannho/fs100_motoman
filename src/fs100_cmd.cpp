@@ -194,7 +194,7 @@ int Fs100Cmd::start(int retry)
     return 0; 
 }
 
-bool Fs100Cmd::pushTraj(float pos[6],float vel[6],float time,int seq)
+bool Fs100Cmd::pushTraj(float pos[NUMBER_OF_JOINTS],float vel[NUMBER_OF_JOINTS],float time,int seq)
 {
     /*
     Sends the given data as a trajectoryPointFull to robot controller.
@@ -237,13 +237,13 @@ bool Fs100Cmd::addCmdToQueue(cmd cmd_point)
     cmdList.push(cmd_point);
 }
 
-bool Fs100Cmd::addPointToQueue(float pos[6],float vel[6],float time)
+bool Fs100Cmd::addPointToQueue(float pos[NUMBER_OF_JOINTS],float vel[NUMBER_OF_JOINTS],float time)
 {
     /*
     add data to cmd queue.
     */
     cmd temp;
-    for(int i=0;i<6;i++)
+    for(int i=0;i<NUMBER_OF_JOINTS;i++)
     {
         temp.pos[i] = pos[i];
         temp.vel[i] = vel[i];
@@ -488,7 +488,7 @@ void Fs100Cmd::printErrorCodeMsg(SimpleMsg *msg)
 }
 
 
-int Fs100Cmd::buildTrajPos(SimpleMsg *tm,float pos[6],float time,int seq)
+int Fs100Cmd::buildTrajPos(SimpleMsg *tm,float pos[NUMBER_OF_JOINTS],float time,int seq)
 {
     /*
     build trajectory point position (vel and acc = 0) message using provided data.
@@ -503,16 +503,16 @@ int Fs100Cmd::buildTrajPos(SimpleMsg *tm,float pos[6],float time,int seq)
 	
 	// set body
 	tm->body.jointTrajData.groupNo = 0;
-	tm->body.jointTrajData.validFields = 7;
+  tm->body.jointTrajData.validFields = NUMBER_OF_JOINTS+1;
 	tm->body.jointTrajData.sequence = seq;
 	tm->body.jointTrajData.time = time;
-	for(int i=0;i<6;i++)
+  for(int i=0;i<NUMBER_OF_JOINTS;i++)
 	{
     	tm->body.jointTrajData.pos[i] = pos[i];
     	tm->body.jointTrajData.vel[i] = (float)0.0;
     	tm->body.jointTrajData.acc[i] = (float)0.0;
 	}
-	for(int i=6;i<10;i++)
+  for(int i=NUMBER_OF_JOINTS;i<ROS_MAX_JOINT;i++)
 	{
     	tm->body.jointTrajData.pos[i] = (float)0.0;
     	tm->body.jointTrajData.vel[i] = (float)0.0;
@@ -521,7 +521,7 @@ int Fs100Cmd::buildTrajPos(SimpleMsg *tm,float pos[6],float time,int seq)
 
 }
 
-int Fs100Cmd::buildTrajFull(SimpleMsg *tm,float pos[6],float vel[6],float time,int seq)
+int Fs100Cmd::buildTrajFull(SimpleMsg *tm,float pos[NUMBER_OF_JOINTS],float vel[NUMBER_OF_JOINTS],float time,int seq)
 {
     /*
     build trajectory point full message using provided data.
@@ -536,16 +536,16 @@ int Fs100Cmd::buildTrajFull(SimpleMsg *tm,float pos[6],float vel[6],float time,i
 	
 	// set body
 	tm->body.jointTrajData.groupNo = 0;
-	tm->body.jointTrajData.validFields = 7;
+  tm->body.jointTrajData.validFields = NUMBER_OF_JOINTS+1;
 	tm->body.jointTrajData.sequence = seq;
 	tm->body.jointTrajData.time = time;
-	for(int i=0;i<6;i++)
+  for(int i=0;i<NUMBER_OF_JOINTS;i++)
 	{
     	tm->body.jointTrajData.pos[i] = pos[i];
     	tm->body.jointTrajData.vel[i] = vel[i];
     	tm->body.jointTrajData.acc[i] = (float)0.0;
 	}
-	for(int i=6;i<10;i++)
+  for(int i=NUMBER_OF_JOINTS;i<ROS_MAX_JOINT;i++)
 	{
     	tm->body.jointTrajData.pos[i] = (float)0.0;
     	tm->body.jointTrajData.vel[i] = (float)0.0;
@@ -578,7 +578,7 @@ void Fs100Cmd::motionReady(SimpleMsg *msg)
     msg->body.motionCtrl.groupNo = 0;
     msg->body.motionCtrl.sequence = 0;
     msg->body.motionCtrl.command = ROS_CMD_CHECK_MOTION_READY;
-    for(int i=0;i<10;i++)
+    for(int i=0;i<ROS_MAX_JOINT;i++)
     {
         msg->body.motionCtrl.data[i] = (float) 0.0;
     }
@@ -599,7 +599,7 @@ void Fs100Cmd::trajectoryStart(SimpleMsg *msg)
     msg->body.motionCtrl.groupNo = 0;
     msg->body.motionCtrl.sequence = 0;
     msg->body.motionCtrl.command = ROS_CMD_START_TRAJ_MODE;
-    for(int i=0;i<10;i++)
+    for(int i=0;i<ROS_MAX_JOINT;i++)
     {
         msg->body.motionCtrl.data[i] = (float) 0.0;
     }
@@ -620,7 +620,7 @@ void Fs100Cmd::trajectoryStop(SimpleMsg *msg)
     msg->body.motionCtrl.groupNo = 0;
     msg->body.motionCtrl.sequence = 0;
     msg->body.motionCtrl.command = ROS_CMD_STOP_TRAJ_MODE;
-    for(int i=0;i<10;i++)
+    for(int i=0;i<ROS_MAX_JOINT;i++)
     {
         msg->body.motionCtrl.data[i] = (float) 0.0;
     }

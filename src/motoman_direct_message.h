@@ -33,7 +33,7 @@
 #define MOTOMAN_DIRECT_MESSAGE_H
 
 #define ROS_MAX_JOINT 10
-
+#define NUMBER_OF_JOINTS 7
 
 //----------------
 // Prefix Section
